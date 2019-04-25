@@ -13,7 +13,7 @@ import turicreate as tc
 
 
 #Read CSV 
-beer2 = pd.read_csv('/beer2.csv')
+beer2 = pd.read_csv('beer2.csv')
 
 
 # In[7]:

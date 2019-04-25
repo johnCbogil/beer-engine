@@ -14,39 +14,10 @@ from flask import send_file
 
 app = Flask(__name__)
 
-# Read beers from csv
-beer2 = pd.read_csv('beer2.csv')
-print("#Read beers from csv")
-
-#Create dataframe of required columns then convert to SFrame for turicreate
-beer2_1 = beer2[['userId','beer_beerid','review_overall']]
-beer2_1 = tc.SFrame(beer2_1)
-beer2_1 = beer2_1.dropna()
-print("#Create dataframe of required columns then convert to SFrame for turicreate")
-
-#Create SFrame of additional info on beers for model
-beer_info = beer2[['beer_beerid','beer_style','beer_abv']].drop_duplicates()
-beer_info = tc.SFrame(beer_info)
-print("#Create SFrame of additional info on beers for model")
-
-#Create training and validation set
-training_data, validation_data = tc.recommender.util.random_split_by_user(beer2_1, 'userId', 'beer_beerid')
-print("#Create training and validation set")
-
-#Create item similarity model
-beer_model = tc.item_similarity_recommender.create(training_data, 
-                                            user_id="userId", 
-                                            item_id="beer_beerid", 
-                                            item_data=beer_info,
-                                            target="review_overall")
-print("#Create item similarity model")           
-
-#Save model
-beer_model.save("beer_model")
-print("#Save model")
-
 #Load model
-beer_model_load = tc.load_model("beer_model")
+beer_model = tc.load_model("beer_model")
+beer2 = pd.read_csv('beer2.csv')
+
 print("#Load model")
 
 @app.route("/")
